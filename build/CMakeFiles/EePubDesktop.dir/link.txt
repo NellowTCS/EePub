@@ -1,0 +1,1 @@
+/usr/bin/c++ CMakeFiles/EePubDesktop.dir/frameworks/Desktop/main.cpp.o CMakeFiles/EePubDesktop.dir/src/EePub.cpp.o CMakeFiles/EePubDesktop.dir/src/ePubLoader.cpp.o CMakeFiles/EePubDesktop.dir/src/LexborWrapper.cpp.o CMakeFiles/EePubDesktop.dir/src/Renderer.cpp.o -o EePubDesktop  libminiz.a libelk.a /workspaces/EePub/external/lexbor/build/liblexbor_static.a 
