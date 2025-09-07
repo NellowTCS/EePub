@@ -1,0 +1,6 @@
+[submodule "elk"]
+	path = external/elk
+	url = https://github.com/cesanta/elk
+[submodule "lexbor"]
+	path = external/lexbor
+	url = https://github.com/lexbor/lexbor
