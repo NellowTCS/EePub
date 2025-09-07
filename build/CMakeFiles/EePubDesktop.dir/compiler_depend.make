@@ -622,25 +622,15 @@ CMakeFiles/EePubDesktop.dir/src/LexborWrapper.cpp.o: /workspaces/EePub/src/Lexbo
   /workspaces/EePub/external/lexbor/source/lexbor/core/str.h \
   /workspaces/EePub/external/lexbor/source/lexbor/core/types.h \
   /workspaces/EePub/external/lexbor/source/lexbor/core/utils.h \
-  /workspaces/EePub/external/lexbor/source/lexbor/dom/base.h \
   /workspaces/EePub/external/lexbor/source/lexbor/dom/collection.h \
-  /workspaces/EePub/external/lexbor/source/lexbor/dom/dom.h \
-  /workspaces/EePub/external/lexbor/source/lexbor/dom/exception.h \
   /workspaces/EePub/external/lexbor/source/lexbor/dom/interface.h \
   /workspaces/EePub/external/lexbor/source/lexbor/dom/interfaces/attr.h \
   /workspaces/EePub/external/lexbor/source/lexbor/dom/interfaces/attr_const.h \
-  /workspaces/EePub/external/lexbor/source/lexbor/dom/interfaces/cdata_section.h \
-  /workspaces/EePub/external/lexbor/source/lexbor/dom/interfaces/character_data.h \
-  /workspaces/EePub/external/lexbor/source/lexbor/dom/interfaces/comment.h \
   /workspaces/EePub/external/lexbor/source/lexbor/dom/interfaces/document.h \
   /workspaces/EePub/external/lexbor/source/lexbor/dom/interfaces/document_fragment.h \
-  /workspaces/EePub/external/lexbor/source/lexbor/dom/interfaces/document_type.h \
   /workspaces/EePub/external/lexbor/source/lexbor/dom/interfaces/element.h \
   /workspaces/EePub/external/lexbor/source/lexbor/dom/interfaces/event_target.h \
   /workspaces/EePub/external/lexbor/source/lexbor/dom/interfaces/node.h \
-  /workspaces/EePub/external/lexbor/source/lexbor/dom/interfaces/processing_instruction.h \
-  /workspaces/EePub/external/lexbor/source/lexbor/dom/interfaces/shadow_root.h \
-  /workspaces/EePub/external/lexbor/source/lexbor/dom/interfaces/text.h \
   /workspaces/EePub/external/lexbor/source/lexbor/html/base.h \
   /workspaces/EePub/external/lexbor/source/lexbor/html/encoding.h \
   /workspaces/EePub/external/lexbor/source/lexbor/html/html.h \
@@ -1279,18 +1269,6 @@ CMakeFiles/EePubDesktop.dir/src/ePubLoader.cpp.o: /workspaces/EePub/src/ePubLoad
 
 /workspaces/EePub/external/lexbor/source/lexbor/html/encoding.h:
 
-/workspaces/EePub/external/lexbor/source/lexbor/dom/interfaces/text.h:
-
-/workspaces/EePub/external/lexbor/source/lexbor/dom/interfaces/node.h:
-
-/workspaces/EePub/external/lexbor/source/lexbor/dom/interfaces/event_target.h:
-
-/workspaces/EePub/external/lexbor/source/lexbor/dom/interfaces/element.h:
-
-/workspaces/EePub/external/lexbor/source/lexbor/dom/interfaces/document_type.h:
-
-/workspaces/EePub/external/lexbor/source/lexbor/dom/interfaces/document.h:
-
 /workspaces/EePub/external/lexbor/source/lexbor/tag/const.h:
 
 /usr/include/c++/13/bits/cpp_type_traits.h:
@@ -1439,6 +1417,8 @@ CMakeFiles/EePubDesktop.dir/src/ePubLoader.cpp.o: /workspaces/EePub/src/ePubLoad
 
 /usr/include/c++/13/bits/stl_function.h:
 
+/workspaces/EePub/external/lexbor/source/lexbor/dom/interfaces/element.h:
+
 /usr/include/ctype.h:
 
 /workspaces/EePub/external/lexbor/source/lexbor/html/interfaces/table_col_element.h:
@@ -1511,8 +1491,6 @@ CMakeFiles/EePubDesktop.dir/src/ePubLoader.cpp.o: /workspaces/EePub/src/ePubLoad
 
 /usr/include/c++/13/bits/predefined_ops.h:
 
-/workspaces/EePub/external/lexbor/source/lexbor/dom/interfaces/processing_instruction.h:
-
 /workspaces/EePub/external/lexbor/source/lexbor/core/hash.h:
 
 /usr/include/c++/13/cwctype:
@@ -1520,6 +1498,8 @@ CMakeFiles/EePubDesktop.dir/src/ePubLoader.cpp.o: /workspaces/EePub/src/ePubLoad
 /usr/include/c++/13/type_traits:
 
 /usr/include/x86_64-linux-gnu/sys/single_threaded.h:
+
+/workspaces/EePub/external/lexbor/source/lexbor/dom/interfaces/event_target.h:
 
 /usr/include/c++/13/bit:
 
@@ -1567,8 +1547,6 @@ CMakeFiles/EePubDesktop.dir/src/ePubLoader.cpp.o: /workspaces/EePub/src/ePubLoad
 
 /usr/include/c++/13/bits/hashtable_policy.h:
 
-/workspaces/EePub/external/lexbor/source/lexbor/dom/dom.h:
-
 /workspaces/EePub/external/lexbor/source/lexbor/html/interfaces/d_list_element.h:
 
 /usr/include/x86_64-linux-gnu/bits/sched.h:
@@ -1580,8 +1558,6 @@ CMakeFiles/EePubDesktop.dir/src/ePubLoader.cpp.o: /workspaces/EePub/src/ePubLoad
 /usr/lib/gcc/x86_64-linux-gnu/13/include/stdbool.h:
 
 /usr/include/c++/13/bits/stl_iterator_base_types.h:
-
-/workspaces/EePub/external/lexbor/source/lexbor/dom/interfaces/comment.h:
 
 /usr/include/alloca.h:
 
@@ -1697,11 +1673,7 @@ CMakeFiles/EePubDesktop.dir/src/ePubLoader.cpp.o: /workspaces/EePub/src/ePubLoad
 
 /usr/include/x86_64-linux-gnu/bits/types/locale_t.h:
 
-/workspaces/EePub/external/lexbor/source/lexbor/dom/interfaces/shadow_root.h:
-
 /usr/include/x86_64-linux-gnu/bits/wctype-wchar.h:
-
-/workspaces/EePub/external/lexbor/source/lexbor/dom/base.h:
 
 /usr/include/x86_64-linux-gnu/bits/types/clockid_t.h:
 
@@ -1777,6 +1749,14 @@ CMakeFiles/EePubDesktop.dir/src/ePubLoader.cpp.o: /workspaces/EePub/src/ePubLoad
 
 /usr/lib/gcc/x86_64-linux-gnu/13/include/syslimits.h:
 
+/usr/include/c++/13/bits/std_function.h:
+
+/usr/include/c++/13/bits/char_traits.h:
+
+/usr/include/x86_64-linux-gnu/c++/13/bits/ctype_inline.h:
+
+/workspaces/EePub/frameworks/Desktop/EePubDesktop.h:
+
 /workspaces/EePub/src/EePub.h:
 
 /usr/include/c++/13/ios:
@@ -1789,19 +1769,13 @@ CMakeFiles/EePubDesktop.dir/src/ePubLoader.cpp.o: /workspaces/EePub/src/ePubLoad
 
 /workspaces/EePub/src/LexborWrapper.h:
 
-/workspaces/EePub/external/lexbor/source/lexbor/html/interfaces/marquee_element.h:
-
-/workspaces/EePub/external/lexbor/source/lexbor/dom/interfaces/document_fragment.h:
-
-/usr/include/x86_64-linux-gnu/gnu/stubs-64.h:
-
-/usr/include/c++/13/bits/node_handle.h:
-
 /usr/include/c++/13/array:
 
 /usr/include/x86_64-linux-gnu/bits/long-double.h:
 
 /usr/include/c++/13/bits/algorithmfwd.h:
+
+/workspaces/EePub/external/lexbor/source/lexbor/dom/interfaces/document.h:
 
 /usr/include/c++/13/bits/erase_if.h:
 
@@ -1885,22 +1859,18 @@ CMakeFiles/EePubDesktop.dir/src/ePubLoader.cpp.o: /workspaces/EePub/src/ePubLoad
 
 /workspaces/EePub/external/lexbor/source/lexbor/core/types.h:
 
-/workspaces/EePub/external/lexbor/source/lexbor/dom/exception.h:
-
 /workspaces/EePub/external/lexbor/source/lexbor/dom/interface.h:
 
 /usr/include/x86_64-linux-gnu/bits/types/__mbstate_t.h:
 
 /workspaces/EePub/external/lexbor/source/lexbor/dom/interfaces/attr.h:
 
-/workspaces/EePub/external/lexbor/source/lexbor/dom/interfaces/cdata_section.h:
+/workspaces/EePub/external/lexbor/source/lexbor/html/interfaces/marquee_element.h:
 
-/usr/include/c++/13/bits/std_function.h:
+/usr/include/x86_64-linux-gnu/gnu/stubs-64.h:
 
-/usr/include/c++/13/bits/char_traits.h:
+/usr/include/c++/13/bits/node_handle.h:
 
-/usr/include/x86_64-linux-gnu/c++/13/bits/ctype_inline.h:
+/workspaces/EePub/external/lexbor/source/lexbor/dom/interfaces/document_fragment.h:
 
-/workspaces/EePub/frameworks/Desktop/EePubDesktop.h:
-
-/workspaces/EePub/external/lexbor/source/lexbor/dom/interfaces/character_data.h:
+/workspaces/EePub/external/lexbor/source/lexbor/dom/interfaces/node.h:
