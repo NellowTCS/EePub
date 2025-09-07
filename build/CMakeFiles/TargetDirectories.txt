@@ -1,5 +1,0 @@
-/workspaces/EePub/build/CMakeFiles/miniz.dir
-/workspaces/EePub/build/CMakeFiles/elk.dir
-/workspaces/EePub/build/CMakeFiles/EePubDesktop.dir
-/workspaces/EePub/build/CMakeFiles/edit_cache.dir
-/workspaces/EePub/build/CMakeFiles/rebuild_cache.dir

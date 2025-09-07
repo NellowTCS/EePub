@@ -1,2 +1,0 @@
-/usr/bin/ar qc libelk.a CMakeFiles/elk.dir/external/elk/elk.c.o
-/usr/bin/ranlib libelk.a
