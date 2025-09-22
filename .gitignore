@@ -40,5 +40,5 @@
 # debug information files
 *.dwo
 
-build/
-lexbor/build/
+build
+lexbor/build
