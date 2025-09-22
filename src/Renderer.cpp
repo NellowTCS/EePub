@@ -9,9 +9,9 @@ void Renderer::renderPage(const std::string& html) {
         return;
     }
 
-    // Example: here you could render to the actual display if display != nullptr
     if (display) {
-        std::cout << "[Renderer] Would render to display (not implemented)" << std::endl;
+        // Simple rendering logic: output HTML content to the console
+        std::cout << "[Renderer] Rendering to display: " << html << std::endl;
     } else {
         std::cout << "[Renderer] No display provided; skipping rendering output" << std::endl;
     }

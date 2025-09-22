@@ -14,7 +14,12 @@ public:
 
     void render() {
         std::cout << "[EePub] Rendering chapter " << currentChapter << std::endl;
-        renderer.renderPage("Dummy HTML from EPUB");
+        // Check if display is set before rendering to prevent segmentation fault
+        if (renderer.isDisplaySet()) {
+            renderer.renderPage("Dummy HTML from EPUB");
+        } else {
+            std::cerr << "[EePub] Error: Display not set. Cannot render." << std::endl;
+        }
     }
 };
 

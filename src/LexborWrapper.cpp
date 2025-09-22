@@ -7,13 +7,17 @@
 bool LexborWrapper::parse(const std::string &html) {
     // Create parser
     lxb_html_parser_t *parser = lxb_html_parser_create();
-    if (!parser) return false;
+    if (!parser) {
+        std::cerr << "[LexborWrapper] Failed to create parser" << std::endl;
+        return false;
+    }
 
     // Parse HTML
     lxb_html_document_t *doc = lxb_html_parse(parser,
         reinterpret_cast<const lxb_char_t*>(html.c_str()),
         html.size());
     if (!doc) {
+        std::cerr << "[LexborWrapper] Failed to parse HTML" << std::endl;
         lxb_html_parser_destroy(parser);
         return false;
     }
@@ -21,10 +25,15 @@ bool LexborWrapper::parse(const std::string &html) {
     lxb_dom_document_t *doc_dom = &doc->dom_document;
     lxb_dom_node_t *root = lxb_dom_document_root(doc_dom);
     if (!root) {
+        std::cerr << "[LexborWrapper] Failed to get root node" << std::endl;
         lxb_html_document_destroy(doc);
         lxb_html_parser_destroy(parser);
         return false;
     }
+
+    // Debugging logs
+    std::cout << "[LexborWrapper] HTML size: " << html.size() << std::endl;
+    std::cout << "[LexborWrapper] HTML content: " << html << std::endl;
 
     // Recursive traversal
     std::function<void(lxb_dom_node_t*)> traverse;

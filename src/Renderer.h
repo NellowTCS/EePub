@@ -10,6 +10,7 @@ public:
     void setDisplay(void* display) {
         this->display = display;
     }
+    bool isDisplaySet() const { return display != nullptr; }
 
     void renderPage(const std::string& html);
 
