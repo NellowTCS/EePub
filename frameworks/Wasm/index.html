@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EePub WASM Preview</title>
+    <style>
+        :root {
+            color-scheme: light dark;
+            font-family: "Space Grotesk", "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+            --bg: #0f172a;
+            --panel: #1e293b;
+            --accent: #38bdf8;
+            --text: #e2e8f0;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #050816, #172554);
+            color: var(--text);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem 1rem 4rem;
+        }
+
+        h1 {
+            margin: 0 0 1rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            font-size: clamp(1.2rem, 2vw, 1.6rem);
+        }
+
+        .panel {
+            width: min(1100px, 100%);
+            background: var(--panel);
+            border: 1px solid rgba(56, 189, 248, 0.2);
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            display: grid;
+            gap: 1rem;
+        }
+
+        label {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            opacity: 0.85;
+        }
+
+        input,
+        select,
+        button {
+            margin-top: 0.3rem;
+            padding: 0.7rem 0.9rem;
+            border-radius: 4px;
+            border: 1px solid rgba(148, 163, 184, 0.3);
+            background: rgba(15, 23, 42, 0.6);
+            color: var(--text);
+            font-size: 0.95rem;
+        }
+
+        button {
+            cursor: pointer;
+            border: none;
+            background: var(--accent);
+            color: #02101f;
+            font-weight: 600;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        button:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(56, 189, 248, 0.3);
+        }
+
+        .controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
+            align-items: end;
+        }
+
+        textarea,
+        pre {
+            width: 100%;
+            min-height: 360px;
+            border-radius: 8px;
+            padding: 1rem;
+            background: rgba(2, 6, 23, 0.85);
+            border: 1px solid rgba(56, 189, 248, 0.2);
+            color: var(--text);
+            font-size: 0.92rem;
+            line-height: 1.5;
+            overflow: auto;
+            white-space: pre-wrap;
+        }
+
+        pre {
+            min-height: 420px;
+        }
+
+        .status-line {
+            font-size: 0.85rem;
+            letter-spacing: 0.04em;
+            opacity: 0.8;
+        }
+
+        .log {
+            font-family: "JetBrains Mono", "Fira Code", monospace;
+            max-height: 120px;
+            overflow-y: auto;
+            border: 1px solid rgba(56, 189, 248, 0.15);
+            padding: 0.7rem;
+            border-radius: 6px;
+            background: rgba(8, 15, 32, 0.8);
+        }
+
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+        }
+
+        @media (max-width: 640px) {
+            .panel {
+                padding: 1rem;
+            }
+
+            pre {
+                min-height: 320px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <h1>EePub · WebAssembly Preview</h1>
+    <div class="panel">
+        <div class="status-line" id="status">Initializing WebAssembly runtime…</div>
+
+        <div class="controls">
+            <div>
+                <label for="epubFile">EPUB file</label>
+                <input type="file" id="epubFile" accept=".epub,application/epub+zip" />
+            </div>
+            <div>
+                <label for="pageWidth">Page width (columns)</label>
+                <input type="number" id="pageWidth" min="40" max="200" value="90" />
+            </div>
+            <div>
+                <label for="chapterSelect">Chapter</label>
+                <select id="chapterSelect"></select>
+            </div>
+            <div>
+                <button id="loadBtn">Load EPUB</button>
+            </div>
+        </div>
+
+        <div class="actions">
+            <button id="renderBtn" disabled>Render</button>
+            <button id="prevBtn" disabled>Previous</button>
+            <button id="nextBtn" disabled>Next</button>
+            <button id="statsBtn" disabled>Memory stats</button>
+        </div>
+
+        <pre id="output">Select an EPUB to begin.</pre>
+        <div class="log" id="log"></div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
+    <script>eruda.init();</script>
+    <script src="EePubWasm.js"></script>
+    <script>
+        const statusEl = document.getElementById('status');
+        const logEl = document.getElementById('log');
+        const outputEl = document.getElementById('output');
+        const chapterSelect = document.getElementById('chapterSelect');
+        const fileInput = document.getElementById('epubFile');
+        const loadBtn = document.getElementById('loadBtn');
+        const renderBtn = document.getElementById('renderBtn');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const statsBtn = document.getElementById('statsBtn');
+        const pageWidthInput = document.getElementById('pageWidth');
+
+        let ModuleInstance;
+        let engine;
+        let ready = false;
+
+        function vectorToArray(vec) {
+            if (!vec || typeof vec.size !== 'function') {
+                return [];
+            }
+            const size = vec.size();
+            const out = [];
+            for (let i = 0; i < size; i += 1) {
+                out.push(vec.get(i));
+            }
+            if (typeof vec.delete === 'function') {
+                vec.delete();
+            }
+            return out;
+        }
+
+        function setStatus(msg) {
+            statusEl.textContent = msg;
+            console.info(msg);
+        }
+
+        function log(msg) {
+            const time = new Date().toLocaleTimeString();
+            logEl.textContent = `[${time}] ${msg}\n` + logEl.textContent;
+        }
+
+        function toggleControls(enabled) {
+            renderBtn.disabled = !enabled;
+            prevBtn.disabled = !enabled;
+            nextBtn.disabled = !enabled;
+            statsBtn.disabled = !enabled;
+            chapterSelect.disabled = !enabled;
+        }
+
+        async function bootstrap() {
+            setStatus('Fetching EePub WebAssembly…');
+            ModuleInstance = await EePubModule();
+            engine = new ModuleInstance.EePubEngine();
+            ready = true;
+            setStatus('Runtime ready. Load an EPUB to continue.');
+            log('EePubModule initialized.');
+        }
+
+        function populateChapters(titles) {
+            chapterSelect.innerHTML = '';
+            titles.forEach((title, idx) => {
+                const option = document.createElement('option');
+                option.value = idx;
+                option.textContent = `${idx.toString().padStart(2, '0')} · ${title}`;
+                chapterSelect.appendChild(option);
+            });
+            chapterSelect.selectedIndex = 0;
+            toggleControls(true);
+        }
+
+        async function loadEpubFile() {
+            if (!ready) {
+                log('Runtime is not ready yet.');
+                return;
+            }
+            const file = fileInput.files?.[0];
+            if (!file) {
+                log('Please select an EPUB file.');
+                return;
+            }
+            setStatus(`Reading ${file.name}…`);
+            const buffer = await file.arrayBuffer();
+            const data = new Uint8Array(buffer);
+            const virtPath = `/books/${Date.now()}_${file.name.replace(/[^a-zA-Z0-9_.-]/g, '_')}`;
+            try {
+                ModuleInstance.FS.mkdir('/books');
+            } catch (_) {
+                // directory already exists
+            }
+            ModuleInstance.FS.writeFile(virtPath, data);
+            setStatus('Parsing EPUB…');
+            const ok = engine.load(virtPath);
+            if (!ok) {
+                log('Failed to load EPUB.');
+                setStatus('Load failed. Check console for details.');
+                toggleControls(false);
+                return;
+            }
+            log(`Loaded ${engine.getTitle()} with ${engine.chapterCount()} chapters.`);
+            const wasmTitles = engine.chapterTitles();
+            const titles = vectorToArray(wasmTitles);
+            populateChapters(titles);
+            setStatus('EPUB loaded. Choose a chapter and render.');
+            renderCurrentChapter();
+        }
+
+        function renderCurrentChapter() {
+            if (!ready) return;
+            const columns = Math.max(40, Math.min(200, parseInt(pageWidthInput.value, 10) || 90));
+            const text = engine.renderCurrent(columns);
+            outputEl.textContent = text || '[No content rendered]';
+            log(`Rendered chapter ${engine.currentChapterIndex()}.`);
+        }
+
+        function gotoChapter(index) {
+            if (!engine.go(index)) {
+                log('Invalid chapter index.');
+                return;
+            }
+            chapterSelect.value = String(index);
+            renderCurrentChapter();
+        }
+
+        loadBtn.addEventListener('click', loadEpubFile);
+        renderBtn.addEventListener('click', renderCurrentChapter);
+        prevBtn.addEventListener('click', () => gotoChapter(Math.max(0, engine.currentChapterIndex() - 1)));
+        nextBtn.addEventListener('click', () => gotoChapter(Math.min(engine.chapterCount() - 1, engine.currentChapterIndex() + 1)));
+        chapterSelect.addEventListener('change', (ev) => gotoChapter(Number(ev.target.value)));
+        pageWidthInput.addEventListener('input', () => {
+            if (!renderBtn.disabled) {
+                renderCurrentChapter();
+            }
+        });
+        statsBtn.addEventListener('click', () => {
+            const stats = engine.memoryStats();
+            log(`Memory usage · current: ${stats.currentBytes} bytes · peak: ${stats.peakBytes} bytes`);
+        });
+
+        bootstrap();
+    </script>
+</body>
+
+</html>

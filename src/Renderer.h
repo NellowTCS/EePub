@@ -1,20 +1,27 @@
 #pragma once
+
+#include <cstddef>
 #include <string>
-#include "LexborWrapper.h"
+
+#include "DisplaySink.h"
+#include "LayoutEngine.h"
 
 class Renderer {
 public:
     Renderer() = default;
     ~Renderer() = default;
 
-    void setDisplay(void* display) {
-        this->display = display;
+    void setDisplay(DisplaySink* sink) {
+        displaySink = sink;
     }
-    bool isDisplaySet() const { return display != nullptr; }
+    bool isDisplaySet() const { return displaySink != nullptr; }
+
+    void setPageWidth(std::size_t columns) { pageWidth = columns; }
 
     void renderPage(const std::string& html);
 
 private:
-    void* display = nullptr;      // Platform-specific display pointer
-    LexborWrapper parser;         // HTML parser
+    DisplaySink* displaySink = nullptr;
+    std::size_t pageWidth = 80;
+    LayoutEngine layoutEngine;
 };
