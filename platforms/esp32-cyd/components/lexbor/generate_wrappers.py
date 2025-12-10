@@ -32,11 +32,12 @@ def main():
         unique_name = str(rel_path).replace("/", "_").replace("\\", "_")
         wrapper_path = output_dir / unique_name
         
-        # Write wrapper that includes the original
-        include_path = abs_path.resolve()
+        # Write wrapper that includes the original using relative path from generated/ dir
+        # Path from generated/ to external/lexbor/source/
+        rel_include = os.path.relpath(abs_path, output_dir)
         with open(wrapper_path, "w") as f:
             f.write(f'/* Auto-generated wrapper for {rel_path} */\n')
-            f.write(f'#include "{include_path}"\n')
+            f.write(f'#include "{rel_include}"\n')
         
         wrapper_files.append(wrapper_path.name)
     
