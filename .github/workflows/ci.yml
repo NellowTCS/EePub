@@ -24,6 +24,11 @@ jobs:
         run: cmake --build build --target EePubDesktop
       - name: Smoke test CLI
         run: ./build/EePubDesktop "examples/Accessible EPUB 3 _ Matt Garrish.epub" --headless --render-all
+      - name: Upload Linux binary
+        uses: actions/upload-artifact@v4
+        with:
+          name: EePubDesktop-linux
+          path: build/EePubDesktop
 
   build-wasm:
     runs-on: ubuntu-latest
@@ -37,6 +42,14 @@ jobs:
           version: latest
       - name: Build WASM bindings
         run: scripts/build_wasm.sh
+      - name: Upload WASM artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: EePub-wasm
+          path: |
+            wasm/EePubWasm.js
+            wasm/EePubWasm.wasm
+            wasm/index.html
 
   build-esp32-cyd:
     runs-on: ubuntu-latest
@@ -54,3 +67,11 @@ jobs:
           python -m pip install platformio
       - name: Build Cheap Yellow Display firmware
         run: scripts/build_esp32_cyd.sh
+      - name: Upload ESP32 firmware
+        uses: actions/upload-artifact@v4
+        with:
+          name: EePub-esp32-cyd
+          path: |
+            platforms/esp32-cyd/.pio/build/cyd/firmware.bin
+            platforms/esp32-cyd/.pio/build/cyd/bootloader.bin
+            platforms/esp32-cyd/.pio/build/cyd/partitions.bin
