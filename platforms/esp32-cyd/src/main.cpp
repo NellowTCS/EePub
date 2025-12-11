@@ -10,12 +10,14 @@
 #include <driver/sdspi_host.h>
 #include <driver/spi_common.h>
 
+#include <algorithm>
 #include <cctype>
 #include <cstdint>
 #include <cstdio>
 #include <cstring>
 #include <memory>
 #include <string>
+#include <sys/stat.h>
 
 #include "DisplaySink.h"
 #include "EePub.h"
@@ -155,6 +157,59 @@ bool fileExists(const std::string& path) {
     return true;
 }
 
+bool hasEpubExtension(const std::string& name) {
+    const auto dot = name.find_last_of('.');
+    if (dot == std::string::npos || dot == name.size() - 1) {
+        return false;
+    }
+    std::string ext = name.substr(dot + 1);
+    std::transform(ext.begin(), ext.end(), ext.begin(), [](unsigned char ch) {
+        return static_cast<char>(std::tolower(ch));
+    });
+    return ext == "epub";
+}
+
+bool findEpubRecursive(const std::string& directory, std::string& outPath) {
+    DIR* dir = opendir(directory.c_str());
+    if (!dir) {
+        return false;
+    }
+
+    struct dirent* entry = nullptr;
+    while ((entry = readdir(dir)) != nullptr) {
+        const char* name = entry->d_name;
+        if (strcmp(name, ".") == 0 || strcmp(name, "..") == 0) {
+            continue;
+        }
+
+        const std::string fullPath = directory + "/" + name;
+        struct stat sb {
+        };
+        if (stat(fullPath.c_str(), &sb) == 0) {
+            if (S_ISDIR(sb.st_mode)) {
+                if (findEpubRecursive(fullPath, outPath)) {
+                    closedir(dir);
+                    return true;
+                }
+            } else if (S_ISREG(sb.st_mode) && hasEpubExtension(name)) {
+                outPath = fullPath;
+                closedir(dir);
+                return true;
+            }
+            continue;
+        }
+
+        if ((entry->d_type == DT_REG || entry->d_type == DT_UNKNOWN) && hasEpubExtension(name) && fileExists(fullPath)) {
+            outPath = fullPath;
+            closedir(dir);
+            return true;
+        }
+    }
+
+    closedir(dir);
+    return false;
+}
+
 bool findFirstEpub(std::string& outPath) {
     static const char* kPreferred[] = {
         "/sdcard/Accessible EPUB 3 _ Matt Garrish.epub",
@@ -168,35 +223,7 @@ bool findFirstEpub(std::string& outPath) {
             return true;
         }
     }
-
-    DIR* dir = opendir(kMountPoint);
-    if (!dir) {
-        return false;
-    }
-
-    struct dirent* entry = nullptr;
-    while ((entry = readdir(dir)) != nullptr) {
-        if (entry->d_type != DT_REG && entry->d_type != DT_UNKNOWN) {
-            continue;
-        }
-        std::string name(entry->d_name);
-        auto dot = name.find_last_of('.');
-        if (dot == std::string::npos) {
-            continue;
-        }
-        std::string ext = name.substr(dot + 1);
-        for (auto& ch : ext) {
-            ch = static_cast<char>(std::tolower(static_cast<unsigned char>(ch)));
-        }
-        if (ext == "epub") {
-            outPath = std::string(kMountPoint) + "/" + name;
-            closedir(dir);
-            return true;
-        }
-    }
-
-    closedir(dir);
-    return false;
+    return findEpubRecursive(kMountPoint, outPath);
 }
 
 void renderCurrentChapter() {
