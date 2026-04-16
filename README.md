@@ -1,6 +1,12 @@
 # EePub
 Portable EPUB 3 renderer targeting embedded, mobile, and desktop platforms. The core pipeline handles EPUB container parsing, DOM + CSS preparation, chapter pagination, and renders to both headless/CLI surfaces and future framebuffer/GUI backends.
 
+---
+
+Archived in favor of LexePub: https://github.com/NellowTCS/lexepub
+
+---
+
 ## Building
 
 ### 1. Build Lexbor
